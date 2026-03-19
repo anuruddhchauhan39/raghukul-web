@@ -1,0 +1,116 @@
+
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel - Shree Raghukul</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+    :root {
+        --primary: #2c3e50;
+        --accent: #e67e22;
+        --light: #f4f7f6;
+    }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--light); margin: 0; }
+    header { background: var(--primary); color: white; padding: 20px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    
+    .btn-container { text-align: center; margin: 30px 0; }
+    button { 
+        padding: 12px 25px; margin: 10px; border: none; border-radius: 5px;
+        background: var(--accent); color: white; font-weight: bold; cursor: pointer;
+        transition: transform 0.2s, background 0.2s;
+    }
+    button:hover { background: #d35400; transform: translateY(-2px); }
+
+    .table-container { width: 95%; margin: auto; overflow-x: auto; background: white; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    th { background: var(--primary); color: white; padding: 15px; text-align: left; }
+    td { padding: 12px 15px; border-bottom: 1px solid #eee; color: #333; }
+    tr:hover { background-color: #f9f9f9; }
+    
+    .status-badge { background: #27ae60; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+</style>
+
+    </style>
+</head>
+<body>
+    <div id="loginSection" style="max-width: 400px; margin: 100px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1); text-align: center;">
+    <h2>Admin Login</h2>
+    <input type="text" id="adminUser" placeholder="Username" style="width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+    <input type="password" id="adminPass" placeholder="Password" style="width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+    <button onclick="checkLogin()" style="width: 95%; background: #2c3e50; color: white; padding: 10px; cursor: pointer;">Login Karein</button>
+    <p id="errorMsg" style="color: red; display: none;"></p>
+</div>
+
+<div id="dashboardSection" style="display: none;">
+    <header><h1>Shree Raghukul Admin Dashboard</h1></header>
+    <div class="btn-container" style="text-align: center; margin: 20px;">
+        <button onclick="loadData('help')" style="padding: 10px 20px; margin: 5px;">Madad ki Arzi dekhein</button>
+        <button onclick="loadData('members')" style="padding: 10px 20px; margin: 5px;">Naye Sadasya dekhein</button>
+        <button onclick="location.reload()" style="padding: 10px 20px; margin: 5px; background: #95a5a6;">Logout</button>
+    </div>
+    <div id="dataDisplay"></div>
+</div>
+    <script>
+async function checkLogin() {
+    const user = document.getElementById('adminUser').value;
+    const pass = document.getElementById('adminPass').value;
+
+    const response = await fetch('/admin-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: user, password: pass })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('dashboardSection').style.display = 'block';
+    } else {
+        const error = document.getElementById('errorMsg');
+        error.innerText = result.message;
+        error.style.display = 'block';
+    }
+}
+
+    async function loadData(type) {
+        const displayDiv = document.getElementById('dataDisplay');
+        displayDiv.innerHTML = "<p style='text-align:center;'>Loading data...</p>";
+
+        const endpoint = type === 'help' ? '/get-help-requests' : '/get-members';
+        const response = await fetch(endpoint);
+        const data = await response.json();
+        
+        if(data.length === 0) {
+            displayDiv.innerHTML = "<p style='text-align:center;'>Abhi koi data nahi hai.</p>";
+            return;
+        }
+
+        let html = `<div class="table-container"><table><thead><tr>`;
+        
+        // Table Headers
+        if(type === 'help') {
+            html += `<th>Naam</th><th>Mobile</th><th>Karan (Reason)</th><th>Status</th>`;
+        } else {
+            html += `<th>Sadasya Naam</th><th>Mobile</th><th>Pata (Address)</th>`;
+        }
+        html += `</tr></thead><tbody>`;
+        
+        // Table Rows
+        data.forEach(item => {
+            html += `<tr>
+                <td>${item.name || item.fullName}</td>
+                <td>${item.phone || item.mobile}</td>
+                <td>${item.reason || item.address}</td>
+                ${type === 'help' ? '<td><span class="status-badge">Received</span></td>' : ''}
+            </tr>`;
+        });
+
+        html += "</tbody></table></div>";
+        displayDiv.innerHTML = html;
+    }
+</script>
+</body>
+</html>
