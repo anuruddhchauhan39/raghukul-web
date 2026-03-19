@@ -32,10 +32,12 @@ const Help = mongoose.model('Help', {
     name: String, phone: String, reason: String 
 });
 
-const Member = mongoose.model('Member', { 
-    fullName: String, mobile: String, address: String 
+const Member = mongoose.model('Member', {
+    fullName: String,
+    mobile: String,
+    address: String,
+    samitiId: String // <-- Ye nayi line zaroori hai ID save karne ke liye
 });
-
 const Donation = mongoose.model('Donation', { 
     name: String, 
     phone: String, 
@@ -58,10 +60,24 @@ app.post('/apply-help', async (req, res) => {
 // Registration Form Submission
 app.post('/register-member', async (req, res) => {
     try {
-        const newMember = new Member(req.body);
+        // Database mein kitne members hain ginein
+        const count = await Member.countDocuments();
+        const uniqueId = `RS-${100 + count + 1}`; // Ye RS-101 se shuru karega
+
+        const newMember = new Member({
+            fullName: req.body.fullName,
+            mobile: req.body.mobile,
+            address: req.body.address,
+            samitiId: uniqueId
+        });
+
         await newMember.save();
-        res.send("<script>alert('Registration Safal!'); window.location.href='/index.html';</script>");
-    } catch (err) { res.status(500).send("Error"); }
+        
+        // Response mein ID bhej rahe hain
+        res.send(`<script>alert('Registration Safal! Aapki ID hai: ${uniqueId}'); window.location.href='/index.html';</script>`);
+    } catch (err) {
+        res.status(500).send("Error");
+    }
 });
 
 // Donation with Screenshot Submission
@@ -78,6 +94,17 @@ app.post('/record-donation', upload.single('screenshot'), async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send("Error saving donation");
+    }
+});
+
+// Sirf Naam aur ID dikhane ke liye route
+app.get('/get-public-members', async (req, res) => {
+    try {
+        // .select() se mobile aur address chupa rahe hain
+        const data = await Member.find().select('fullName samitiId -_id');
+        res.json(data);
+    } catch (err) {
+        res.status(500).json([]);
     }
 });
 
