@@ -1,4 +1,4 @@
-/* --- Global Resets (Sabse Zaruri) --- */
+/* --- 1. Global Reset (Sabse Zaruri) --- */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -10,144 +10,150 @@ body {
     overflow-x: hidden; 
     background: #f4f4f4; 
     width: 100%;
+    line-height: 1.6;
 }
 
-/* --- Header & Navbar Fix --- */
+/* --- 2. Navbar & Header (Mobile Friendly) --- */
 .navbar {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Mobile par logo upar, links niche */
     align-items: center;
     background-color: #2c3e50;
-    padding: 20px;
+    padding: 20px 10px;
     width: 100%;
     color: white;
-    text-align: center;
 }
 
-.logo h1 {
-    font-size: 24px;
-    color: #f1c40f;
-    margin-bottom: 5px;
-}
-
-.logo h3 {
-    font-size: 14px;
-    opacity: 0.8;
-}
+.logo { text-align: center; margin-bottom: 10px; }
+.logo h1 { font-size: 24px; color: #f1c40f; margin: 0; }
+.logo h3 { font-size: 12px; opacity: 0.8; margin: 5px 0 0 0; }
 
 .nav-links {
     display: flex;
-    flex-wrap: wrap; /* Mobile par menu niche shift ho jayegi */
-    list-style: none;
-    gap: 15px;
+    flex-wrap: wrap; /* Jagah kam hone par links agli line mein aa jayenge */
     justify-content: center;
-    margin-top: 15px;
+    list-style: none;
+    gap: 10px;
+    padding: 0;
+    margin-top: 10px;
 }
+
+.nav-links li { margin: 0; }
 
 .nav-links a {
     color: white;
     text-decoration: none;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 13px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 5px;
+    white-space: nowrap; /* Text ko tutne se rokta hai */
 }
 
-/* --- Hero Section --- */
+/* --- 3. Hero Section --- */
 .hero { 
     text-align: center; 
-    padding: 40px 20px; 
+    padding: 60px 20px; 
     background: #ecf0f1; 
 }
+.hero h2 { font-size: 22px; color: #2c3e50; }
 
-/* --- Features & Cards (Mobile Fix) --- */
+/* --- 4. Features & Cards --- */
 .features { 
     display: flex; 
-    flex-wrap: wrap; /* Isse cards niche aa jayenge */
+    flex-wrap: wrap; 
     justify-content: center; 
-    gap: 15px; 
-    padding: 20px; 
+    gap: 20px; 
+    padding: 30px 15px; 
 }
 
 .card { 
     background: white; 
-    padding: 20px; 
-    border-radius: 8px; 
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-    width: 100%; /* Mobile par poori width lega */
-    max-width: 300px; /* Desktop par 300px se bada nahi hoga */
+    padding: 25px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+    width: 100%; 
+    max-width: 320px; 
     text-align: center; 
 }
 
-/* --- Form Sections --- */
+/* --- 5. Forms --- */
 .form-section {
-    width: 90%;
+    width: 92%;
     max-width: 500px;
-    margin: 20px auto;
-    padding: 20px;
+    margin: 30px auto;
+    padding: 25px;
     background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-/* --- Team Section (Mobile Fix) --- */
-.team-section { padding: 40px 10px; background: #fff; text-align: center; }
+.form-section input, .form-section textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+/* --- 6. Team Section --- */
+.team-section { padding: 50px 15px; background: #fff; text-align: center; }
 
 .team-container { 
     display: flex; 
     flex-wrap: wrap; 
     justify-content: center; 
     gap: 20px; 
-    width: 100%; 
-    margin: 0 auto; 
 }
 
 .member { 
-    padding: 20px; 
-    border: 1px solid #ddd; 
-    border-radius: 10px; 
-    width: 100%; /* Fixed 300px hata kar 100% kiya */
-    max-width: 350px; 
-    background: #fff;
+    padding: 25px; 
+    border: 1px solid #eee; 
+    border-radius: 12px; 
+    width: 100%; 
+    max-width: 340px; 
+    background: #fafafa;
 }
 
-/* --- Modal Styling --- */
+/* --- 7. Modal (Popup) Fix --- */
 .modal {
     display: none;
     position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.8);
-    overflow-y: auto;
+    z-index: 10000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
 }
 
 .modal-content {
-    background-color: #fff;
-    margin: 10% auto;
-    padding: 20px;
+    background: white;
+    margin: 15% auto;
+    padding: 25px;
     border-radius: 15px;
     width: 90%;
     max-width: 450px;
-    position: relative;
 }
 
-/* --- Buttons --- */
-button, .card button {
+/* --- 8. Buttons --- */
+button {
     background: #27ae60;
     color: white;
     border: none;
-    padding: 12px 20px;
-    border-radius: 5px;
+    padding: 14px 20px;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
     width: 100%;
+    font-size: 16px;
+    transition: 0.3s;
 }
 
-/* --- Mobile Specific Fixes --- */
-@media (max-width: 600px) {
-    .logo h1 { font-size: 20px; }
-    .nav-links { gap: 10px; }
-    .nav-links a { font-size: 12px; }
-    .hero h2 { font-size: 22px; }
+button:hover { background: #219150; }
+
+/* --- 9. Desktop Adjustments --- */
+@media (min-width: 768px) {
+    .navbar { flex-direction: row; justify-content: space-between; padding: 15px 5%; }
+    .logo { text-align: left; margin-bottom: 0; }
+    .nav-links { margin-top: 0; gap: 20px; }
 }
