@@ -11,9 +11,9 @@
         input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
         #admin-content { display: none; max-width: 1100px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #2c3e50; border-bottom: 3px solid #f1c40f; padding-bottom: 10px; }
-        .section-title { margin-top: 30px; background: #2c3e50; color: white; padding: 10px; border-radius: 5px; }
+        .section-title { margin-top: 30px; background: #2c3e50; color: white; padding: 10px; border-radius: 5px; font-weight: bold; }
         .table-wrapper { overflow-x: auto; margin-top: 15px; }
-        table { width: 100%; border-collapse: collapse; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
         th, td { border: 1px solid #ddd; padding: 12px; text-align: left; font-size: 14px; }
         th { background: #34495e; color: white; }
         .btn-delete { background: #e74c3c; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; }
@@ -44,7 +44,9 @@
                         <th>Naam</th><th>Mobile</th><th>Karan / Samasya</th><th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="help-table"></tbody>
+                <tbody id="help-table">
+                    <tr><td colspan="4" style="text-align:center;">Data load ho raha hai...</td></tr>
+                </tbody>
             </table>
         </div>
 
@@ -101,17 +103,22 @@
 
     async function loadAdminData() {
         try {
-            // Help Requests
+            // Fetch Help Requests
             const resHelp = await fetch('/get-help-requests');
             const helps = await resHelp.json();
-            document.getElementById('help-table').innerHTML = helps.map(h => `
-                <tr>
-                    <td>${h.name}</td><td>${h.phone}</td><td>${h.reason}</td>
-                    <td><button class="btn-delete" onclick="deleteEntry('help', '${h._id}')">Delete</button></td>
-                </tr>
-            `).join('');
+            const helpBody = document.getElementById('help-table');
+            if(helps.length > 0) {
+                helpBody.innerHTML = helps.map(h => `
+                    <tr>
+                        <td>${h.name}</td><td>${h.phone}</td><td>${h.reason}</td>
+                        <td><button class="btn-delete" onclick="deleteEntry('help', '${h._id}')">Delete</button></td>
+                    </tr>
+                `).join('');
+            } else {
+                helpBody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Abhi koi aavedan nahi hai.</td></tr>";
+            }
 
-            // Members
+            // Fetch Members
             const resMem = await fetch('/get-members');
             const members = await resMem.json();
             document.getElementById('member-table').innerHTML = members.map(m => `
@@ -122,7 +129,7 @@
                 </tr>
             `).join('');
 
-            // Donations
+            // Fetch Donations
             const resDon = await fetch('/get-donations');
             const donations = await resDon.json();
             document.getElementById('donation-table').innerHTML = donations.map(d => `
@@ -132,7 +139,10 @@
                     <td><button class="btn-delete" onclick="deleteEntry('donation', '${d._id}')">Delete</button></td>
                 </tr>
             `).join('');
-        } catch (error) { console.log("Load error"); }
+        } catch (error) { 
+            console.error("Data loading error:", error);
+            document.getElementById('help-table').innerHTML = "<tr><td colspan='4' style='text-align:center; color:red;'>Server se data nahi mil raha.</td></tr>";
+        }
     }
 
     async function deleteEntry(type, id) {
