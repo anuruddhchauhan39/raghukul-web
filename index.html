@@ -1,186 +1,193 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>श्री रघुकुल सेवा परिवार, मैनपुरी</title>
+    <style>
+        /* Mobile aur Desktop dono ke liye professional styling */
+        body { font-family: 'Segoe UI', Arial, sans-serif; overflow-x: hidden; margin: 0; }
+        .member-card {
+            background: white; padding: 15px; border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align: center;
+            border-left: 5px solid #27ae60; transition: 0.3s;
+        }
+        .member-card:hover { transform: translateY(-5px); }
+        
+        /* Modal (Popup) Styling */
+        .custom-modal {
+            display: none; position: fixed; z-index: 9999; left: 0; top: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.8);
+        }
+        .modal-box {
+            background: white; margin: 10% auto; padding: 25px;
+            width: 90%; max-width: 500px; border-radius: 15px;
+            position: relative; max-height: 80vh; overflow-y: auto;
+        }
+        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #333; }
+        
+        /* Member Button */
+        .view-btn {
+            background: #27ae60; color: white; padding: 15px 30px;
+            border: none; border-radius: 50px; font-size: 1.1rem;
+            cursor: pointer; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+            margin: 20px 0; width: 100%; max-width: 350px;
+        }
+    </style>
 </head>
 <body>
     <header>
-    <nav class="navbar">
-        <div class="logo">
-             <h1>Shree Raghukul Sewa Parivar</h1>
-            <h3>TEAM ANURUDDH CHAUHAN KHARPARI</h3>
-        </div>
-        <ul class="nav-links">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#join-us">join us</a></li>
-            <li><a href="#apply-help">madad ke liye aavedan</a></li>
-            <li><a href="#donate">donate</a></li>
-            <li><a href="admin.html">Admin</a></li>
-        </ul>
-    </nav>
-</header>
+        <nav class="navbar">
+            <div class="logo">
+                 <h1>Shree Raghukul Sewa Parivar</h1>
+                <h3>TEAM ANURUDDH CHAUHAN KHARPARI</h3>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#join-us">Join Us</a></li>
+                <li><a href="#apply-help">Madad</a></li>
+                <li><a href="#donate">Donate</a></li>
+                <li><a href="admin.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <section class="hero">
+    <section class="hero" id="home">
         <h2>मानवता की सेवा, हमारा संकल्प</h2>
         <p>मैनपुरी में जरूरतमंदों की मदद के लिए एक छोटा सा प्रयास।</p>
-        <button>अभी जुड़ें</button>
-   <section class="features">
-    <div class="card">
-        <h3>जरूरतमंद की सहायता</h3>
-        <p>Hamari samiti se madad pane ke liye yahan click karein.</p>
-        <button onclick="openModal('helpModal')">Aavedan Karein</button>
-    </div>
-    
-    <div class="card">
-        <h3>samiti mein Yogdan</h3>
-        <p>Apna sahyog dene ke liye QR scan karein.</p>
-        <button onclick="openModal('donateModal')">Yogdan Dein</button>
-    </div>
-</section>
-
-<div id="helpModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('helpModal')">&times;</span>
-        <h2>Madad ke liye Aavedan</h2>
-        <form action="/apply-help" method="POST">
-            <input type="text" name="name" placeholder="Pura Naam" required style="width:100%; margin:10px 0; padding:8px;">
-            <input type="tel" name="phone" placeholder="Mobile Number" required style="width:100%; margin:10px 0; padding:8px;">
-            <textarea name="reason" placeholder="Madad ka karan" style="width:100%; margin:10px 0; padding:8px;"></textarea>
-            <button type="submit" style="width:100%; background:#27ae60; color:white; padding:10px; border:none;">Bhejein</button>
-        </form>
-    </div>
-</div>
-
-<div id="donateModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('donateModal')">&times;</span>
-        <h2 style="text-align:center;">Samiti mein Yogdan</h2>
-        <form id="donationDetailsForm" enctype="multipart/form-data">
-            <input type="text" name="name" placeholder="Aapka Naam" required style="width:100%; margin:5px 0;">
-            <input type="tel" name="phone" placeholder="Mobile" required style="width:100%; margin:5px 0;">
-            <div style="text-align:center;">
-                <p>Step 1: QR Scan karein</p>
-                <img src="samitiqr.jpeg" style="width:200px; border:2px solid #ddd;">
-                <p>Step 2: Screenshot upload karein</p>
-                <input type="file" name="screenshot" accept="image/*" required>
-            </div>
-            <button type="submit" style="width:100%; background:#e67e22; color:white; padding:10px; margin-top:10px;">Submit Karein</button>
-        </form>
-    </div>
-</div>
-
-    <div id="thankYouSection" style="display:none; text-align:center; padding: 40px;">
-        <h3 style="color: #27ae60;">Aapka bahut-bahut dhanyawad! ❤️</h3>
-        <p>Aapki details aur screenshot samiti ke paas surakshit pahunch gaya hai.</p>
-        <button onclick="location.reload()" style="background: #34495e; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Wapas Jayein</button>
-    </div>
-</section> </div>
+        <a href="#join-us"><button style="cursor:pointer;">अभी जुड़ें</button></a>
     </section>
-</body>
-<section id="apply-help" class="form-section">
-    <h2>मदद के लिए आवेदन करें</h2>
-    <form action="/apply-help" method="POST" enctype="multipart/form-data">
-        <label for="name">पूरा नाम:</label>
-        <input type="text" id="name" name="name" required>
 
-        <label for="phone">मोबाइल नंबर:</label>
-        <input type="tel" id="phone" name="phone" required>
-
-        <label for="reason">सहायता का कारण (जैसे: शादी, इलाज, शिक्षा):</label>
-        <textarea id="reason" name="reason" rows="4" required></textarea>
-
-        <label for="document">आवश्यक दस्तावेज (आधार/प्रमाण पत्र):</label>
-        <input type="file" id="document" name="document" accept="image/*, .pdf">
-
-        <button type="submit">आवेदन भेजें</button>
-    </form>
-</section>
-
-<section id="join-us" class="form-section">
-    <h2>Humsay Judein (Register)</h2>
-    <form action="/register-member" method="POST">
-   <input type="text" name="fullName" placeholder="Pura Naam" required>
-   <input type="tel" name="mobile" placeholder="Mobile Number" required>
-   <textarea name="address" placeholder="Aapka Pata"></textarea>
-   <button type="submit">Sadasya Banein</button>
-</form>
-</section>
-<section id="public-members-section" style="padding: 20px; background: #f9f9f9; border-top: 2px solid #27ae60;">
-    <h2 style="text-align: center; color: #34495e;">Hamare Garvshali Sadasya</h2>
-    <div id="members-display-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; padding: 20px;">
+    <section class="features">
+        <div class="card">
+            <h3>जरूरतमंद की सहायता</h3>
+            <p>Hamari samiti se madad pane ke liye yahan click karein.</p>
+            <button onclick="openModal('helpModal')">Aavedan Karein</button>
         </div>
-</section>
+        
+        <div class="card">
+            <h3>Samiti mein Yogdan</h3>
+            <p>Apna sahyog dene ke liye QR scan karein.</p>
+            <button onclick="openModal('donateModal')">Yogdan Dein</button>
+        </div>
+    </section>
 
-<section id="team" class="team-section">
-    <h2>हमारी टीम</h2>
-    <div class="team-container">
-        <div class="member">
-            <h3>अनुद्ध चौहान (Founder & Chairman)</h3>
-            <p>पता: मैनपुरी, उत्तर प्रदेश</p>
-            <p>संपर्क: 9027206045</p>
-            <p>Instagram: <a href="https://www.instagram.com/anuruddh_chauhan_0671" target="_blank">@anuruddh_chauhan_0671</a></p>
-        </div>
-        <div class="member">
-            <h3>अंकुर मिश्रा (Main Management)</h3>
-            <p>पता: मैनपुरी, उत्तर प्रदेश</p>
-        </div>
-        <div class="member">
-            <h3> Mrityunjay kumar (Advisor)</h3>
-            <p>Address: Rohtas, Bihar</p>
+    <section style="text-align: center; padding: 20px; background: #f4f7f6;">
+        <button class="view-btn" onclick="openMembersPopup()">📜 Hamare Gauravshali Sadasya Dekhein</button>
+    </section>
+
+    <div id="membersPopup" class="custom-modal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeMembersPopup()">&times;</span>
+            <h2 style="text-align: center; color: #2c3e50;">Samiti Members List</h2>
+            <hr>
+            <div id="members-list-content" style="display: grid; grid-template-columns: 1fr; gap: 15px; padding-top: 15px;">
+                </div>
         </div>
     </div>
-</section>
-</html>
-<script>
-    // Modal kholne ke liye function
-    function openModal(id) {
-        var modal = document.getElementById(id);
-        if (modal) {
-            modal.style.display = "block";
-        }
-    }
 
-    // Modal band karne ke liye function
-    function closeModal(id) {
-        var modal = document.getElementById(id);
-        if (modal) {
-            modal.style.display = "none";
-        }
-    }
+    <div id="helpModal" class="custom-modal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal('helpModal')">&times;</span>
+            <h2>Madad ke liye Aavedan</h2>
+            <form action="/apply-help" method="POST">
+                <input type="text" name="name" placeholder="Pura Naam" required style="width:100%; margin:10px 0; padding:12px; border:1px solid #ccc; border-radius:5px;">
+                <input type="tel" name="phone" placeholder="Mobile Number" required style="width:100%; margin:10px 0; padding:12px; border:1px solid #ccc; border-radius:5px;">
+                <textarea name="reason" placeholder="Madad ka karan" style="width:100%; margin:10px 0; padding:12px; border:1px solid #ccc; border-radius:5px; height:100px;"></textarea>
+                <button type="submit" style="width:100%; background:#27ae60; color:white; padding:12px; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">Bhejein</button>
+            </form>
+        </div>
+    </div>
 
-    // Agar user modal ke bahar click kare toh bhi band ho jaye
-    window.onclick = function(event) {
-        if (event.target.className === 'modal') {
-            event.target.style.display = "none";
-        }
-    }
-    // Members ki list fetch karke dikhane ke liye function
-async function displayPublicMembers() {
-    try {
-        const response = await fetch('/get-public-members');
-        const members = await response.json();
-        const container = document.getElementById('members-display-grid');
-        
-        container.innerHTML = ""; // Purana data saaf karne ke liye
-
-        members.forEach(m => {
-            const memberCard = `
-                <div style="background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;">
-                    <h4 style="margin: 5px 0; color: #27ae60;">${m.fullName}</h4>
-                    <p style="font-size: 0.9em; color: #7f8c8d;">ID: ${m.samitiId}</p>
+    <div id="donateModal" class="custom-modal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal('donateModal')">&times;</span>
+            <h2 style="text-align:center;">Samiti mein Yogdan</h2>
+            <form id="donationDetailsForm" enctype="multipart/form-data">
+                <input type="text" name="name" placeholder="Aapka Naam" required style="width:100%; margin:10px 0; padding:12px; border:1px solid #ccc; border-radius:5px;">
+                <div style="text-align:center;">
+                    <p><strong>Step 1:</strong> QR Scan karein</p>
+                    <img src="samitiqr.jpeg" style="width:100%; max-width:250px; border:5px solid #f1f1f1; border-radius:10px;">
+                    <p><strong>Step 2:</strong> Screenshot upload karein</p>
+                    <input type="file" name="screenshot" accept="image/*" required style="margin:10px 0;">
                 </div>
-            `;
-            container.innerHTML += memberCard;
-        });
-    } catch (err) {
-        console.error("Members load nahi ho paye");
-    }
-}
+                <button type="submit" style="width:100%; background:#e67e22; color:white; padding:12px; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">Submit Karein</button>
+            </form>
+        </div>
+    </div>
 
-// Page load hote hi function ko chalayein
-window.onload = function() {
-    displayPublicMembers();
-};
-</script>
-</body> 
+    <section id="join-us" class="form-section" style="padding: 40px 20px;">
+        <h2 style="text-align:center;">Humsay Judein (Register)</h2>
+        <form action="/register-member" method="POST" style="max-width:500px; margin:auto; background:white; padding:20px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+            <input type="text" name="fullName" placeholder="Pura Naam" required style="width:100%; margin:10px 0; padding:12px; border:1px solid #ccc; border-radius:5px;">
+            <input type="tel" name="mobile" placeholder="Mobile Number" required style="width:100%; margin:10px 0; padding:12px; border:1px solid #ccc; border-radius:5px;">
+            <textarea name="address" placeholder="Aapka Pata" style="width:100%; margin:10px 0; padding:12px; border:1px solid #ccc; border-radius:5px; height:80px;"></textarea>
+            <button type="submit" style="width:100%; background:#27ae60; color:white; padding:12px; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">Sadasya Banein</button>
+        </form>
+    </section>
+
+    <section id="team" class="team-section">
+        <h2>हमारी टीम</h2>
+        <div class="team-container">
+            <div class="member">
+                <h3>अनुद्ध चौहान (Founder & Chairman)</h3>
+                <p>पता: मैनपुरी, उत्तर प्रदेश</p>
+                <p>संपर्क: 9027206045</p>
+                <p>Instagram: <a href="https://www.instagram.com/anuruddh_chauhan_0671" target="_blank">@anuruddh_chauhan_0671</a></p>
+            </div>
+            <div class="member">
+                <h3>अंकुर मिश्रा (Main Management)</h3>
+                <p>पता: मैनपुरी, उत्तर प्रदेश</p>
+            </div>
+            <div class="member">
+                <h3>Mrityunjay kumar (Advisor)</h3>
+                <p>Address: Rohtas, Bihar</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function openModal(id) { document.getElementById(id).style.display = "block"; }
+        function closeModal(id) { document.getElementById(id).style.display = "none"; }
+
+        // Members Popup functions
+        async function openMembersPopup() {
+            const popup = document.getElementById('membersPopup');
+            const container = document.getElementById('members-list-content');
+            popup.style.display = "block";
+            container.innerHTML = "<p style='text-align:center;'>Loading Members...</p>";
+
+            try {
+                const response = await fetch('/get-public-members');
+                const members = await response.json();
+                container.innerHTML = ""; 
+
+                if(members.length === 0) {
+                    container.innerHTML = "<p style='text-align:center;'>Abhi koi sadasya nahi hai.</p>";
+                    return;
+                }
+
+                members.forEach(m => {
+                    container.innerHTML += `
+                        <div class="member-card">
+                            <h4 style="margin: 5px 0; color: #27ae60;">${m.fullName}</h4>
+                            <p style="font-size: 0.9em; color: #7f8c8d; margin:0;">ID: ${m.samitiId}</p>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                container.innerHTML = "<p style='text-align:center; color:red;'>Error loading list.</p>";
+            }
+        }
+
+        function closeMembersPopup() { document.getElementById('membersPopup').style.display = "none"; }
+
+        window.onclick = function(event) {
+            if (event.target.className === 'custom-modal') {
+                event.target.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

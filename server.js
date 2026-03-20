@@ -4,65 +4,75 @@ const bodyparser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 const multer = require('multer');
+const fs = require('fs');
 
 const app = express();
 
-// --- 1. Middlewares ---
+// --- 1. Folders Setup (Zaroori hai file upload ke liye) ---
+const uploadDir = path.join(__dirname, 'uploads/donations/');
+if (!fs.existsSync(uploadDir)){
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// --- 2. Middlewares ---
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.static(path.join(__dirname, '/')));
-app.use('/uploads', express.static('uploads')); // Screenshots dikhane ke liye
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// --- 2. Database Connection ---
+// --- 3. Database Connection ---
 mongoose.connect("mongodb+srv://anuruddhchauhan21:anuruddh%409027@cluster0.bsu0qme.mongodb.net/raghukulDB?retryWrites=true&w=majority")
-  .then(() => console.log("Database Live! 🚀"))
-  .catch((err) => console.log("DB Error: ", err));
-// --- 3. Multer Setup (File Upload) ---
+  .then(() => console.log("Database Connected Successfully! 🚀"))
+  .catch((err) => console.log("DB Connection Error: ", err));
+
+// --- 4. Multer Setup (Screenshot Upload) ---
 const storage = multer.diskStorage({
-    destination: './uploads/donations/',
+    destination: (req, file, cb) => {
+        cb(null, uploadDir);
+    },
     filename: (req, file, cb) => {
         cb(null, 'Donation-' + Date.now() + path.extname(file.originalname));
     }
 });
 const upload = multer({ storage: storage });
 
-// --- 4. Models ---
+// --- 5. Models (Schema) ---
 const Help = mongoose.model('Help', { 
-    name: String, phone: String, reason: String 
+    name: String, phone: String, reason: String, date: { type: Date, default: Date.now }
 });
 
 const Member = mongoose.model('Member', {
     fullName: String,
     mobile: String,
     address: String,
-    samitiId: String // <-- Ye nayi line zaroori hai ID save karne ke liye
+    samitiId: String,
+    date: { type: Date, default: Date.now }
 });
+
 const Donation = mongoose.model('Donation', { 
     name: String, 
     phone: String, 
-    address: String, 
     screenshot: String,
     date: { type: Date, default: Date.now }
 });
 
-// --- 5. Routes ---
+// --- 6. Routes ---
 
 // Madad Form Submission
 app.post('/apply-help', async (req, res) => {
     try {
         const newHelp = new Help(req.body);
         await newHelp.save();
-        res.send("<script>alert('Aavedan Safal!'); window.location.href='/index.html';</script>");
-    } catch (err) { res.status(500).send("Error"); }
+        res.send("<script>alert('Aapka aavedan samiti ko mil gaya hai!'); window.location.href='/index.html';</script>");
+    } catch (err) { res.status(500).send("Server Error"); }
 });
 
-// Registration Form Submission
+// Registration with Unique ID (RS-101...)
 app.post('/register-member', async (req, res) => {
     try {
-        // Database mein kitne members hain ginein
         const count = await Member.countDocuments();
-        const uniqueId = `RS-${100 + count + 1}`; // Ye RS-101 se shuru karega
+        const uniqueId = `RS-${100 + count + 1}`; 
 
         const newMember = new Member({
             fullName: req.body.fullName,
@@ -72,40 +82,29 @@ app.post('/register-member', async (req, res) => {
         });
 
         await newMember.save();
-        
-        // Response mein ID bhej rahe hain
-        res.send(`<script>alert('Registration Safal! Aapki ID hai: ${uniqueId}'); window.location.href='/index.html';</script>`);
-    } catch (err) {
-        res.status(500).send("Error");
-    }
+        res.send(`<script>alert('Registration Safal! Aapki Sadasya ID hai: ${uniqueId}'); window.location.href='/index.html';</script>`);
+    } catch (err) { res.status(500).send("Registration Error"); }
 });
 
-// Donation with Screenshot Submission
+// Donation with Screenshot
 app.post('/record-donation', upload.single('screenshot'), async (req, res) => {
     try {
         const newDonation = new Donation({
             name: req.body.name,
             phone: req.body.phone,
-            address: req.body.address,
             screenshot: req.file ? req.file.filename : ''
         });
         await newDonation.save();
-        res.status(200).send("Success");
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Error saving donation");
-    }
+        res.send("<script>alert('Sahyog ke liye dhanyawad! Details save ho gayi hain.'); window.location.href='/index.html';</script>");
+    } catch (err) { res.status(500).send("Upload Error"); }
 });
 
-// Sirf Naam aur ID dikhane ke liye route
+// Public Member List (Sirf Naam aur ID dikhegi)
 app.get('/get-public-members', async (req, res) => {
     try {
-        // .select() se mobile aur address chupa rahe hain
         const data = await Member.find().select('fullName samitiId -_id');
         res.json(data);
-    } catch (err) {
-        res.status(500).json([]);
-    }
+    } catch (err) { res.status(500).json([]); }
 });
 
 // Admin Login
@@ -118,22 +117,11 @@ app.post('/admin-login', (req, res) => {
     }
 });
 
-// Admin Data Fetching Routes
-app.get('/get-help-requests', async (req, res) => {
-    const data = await Help.find();
-    res.json(data);
-});
+// Admin Dashboard Data Routes
+app.get('/get-help-requests', async (req, res) => { res.json(await Help.find()); });
+app.get('/get-members', async (req, res) => { res.json(await Member.find()); });
+app.get('/get-donations', async (req, res) => { res.json(await Donation.find()); });
 
-app.get('/get-members', async (req, res) => {
-    const data = await Member.find();
-    res.json(data);
-});
-
-app.get('/get-donations', async (req, res) => {
-    const data = await Donation.find();
-    res.json(data);
-});
-
-// --- 6. Start Server ---
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT} 🚀`));
+// --- 7. Start Server (Render Compatible) ---
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Raghukul Server Live on Port ${PORT} 🚀`));
