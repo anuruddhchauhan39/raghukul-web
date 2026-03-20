@@ -111,15 +111,23 @@
         `).join('');
     }
 
-    // Delete karne ka function (Backend route ki zaroorat padegi)
-    async function deleteEntry(type, id) {
-        if(confirm('Kya aap ise delete karna chahte hain?')) {
-            alert('Delete function ke liye backend update baki hai, lekin UI taiyar hai!');
-            // Yahan delete ka fetch call aayega
+    // Admin.html mein ye function replace karein
+async function deleteEntry(type, id) {
+    if(confirm('Kya aap ise hamesha ke liye delete karna chahte hain?')) {
+        try {
+            const response = await fetch(`/delete-entry/${type}/${id}`, {
+                method: 'DELETE'
+            });
+            const result = await response.json();
+            if(result.success) {
+                alert('Entry delete ho gayi!');
+                loadAdminData(); // List ko turant refresh karne ke liye
+            }
+        } catch (err) {
+            alert('Delete karne mein error aaya!');
         }
     }
-
-    window.onload = loadAdminData;
+}
 </script>
 
 </body>

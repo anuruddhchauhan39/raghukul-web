@@ -124,4 +124,26 @@ app.get('/get-donations', async (req, res) => { res.json(await Donation.find());
 
 // --- 7. Start Server (Render Compatible) ---
 const PORT = process.env.PORT || 3000;
+
+// --- 7. Delete Entries (Admin Special) ---
+app.delete('/delete-entry/:type/:id', async (req, res) => {
+    try {
+        const { type, id } = req.params;
+        let model;
+
+        // Type ke hisaab se sahi table (model) chunna
+        if (type === 'help') model = Help;
+        else if (type === 'member') model = Member;
+        else if (type === 'donation') model = Donation;
+
+        if (model) {
+            await model.findByIdAndDelete(id);
+            res.json({ success: true, message: "Entry Deleted!" });
+        } else {
+            res.status(400).json({ success: false, message: "Invalid Type" });
+        }
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
 app.listen(PORT, () => console.log(`Raghukul Server Live on Port ${PORT} 🚀`));
