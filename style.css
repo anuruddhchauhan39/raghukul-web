@@ -158,19 +158,6 @@ button:hover { background: #219150; }
     .nav-links { margin-top: 0; gap: 20px; }
 }
 
-.whatsapp-float {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #25d366;
-  border-radius: 50%; /* Isse perfect gol banega */
-  padding: 10px;
-  z-index: 1000;
-  box-shadow: 2px 5px 15px rgba(0,0,0,0.3);
-  /* Animation niche hai */
-  animation: bounce 2s infinite;
-}
-
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
   40% {transform: translateY(-10px);}
