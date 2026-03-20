@@ -8,7 +8,7 @@ const fs = require('fs');
 
 const app = express();
 
-// --- 1. Folders Setup (Zaroori hai file upload ke liye) ---
+// --- 1. Folders Setup ---
 const uploadDir = path.join(__dirname, 'uploads/donations/');
 if (!fs.existsSync(uploadDir)){
     fs.mkdirSync(uploadDir, { recursive: true });
@@ -26,7 +26,7 @@ mongoose.connect("mongodb+srv://anuruddhchauhan21:anuruddh%409027@cluster0.bsu0q
   .then(() => console.log("Database Connected Successfully! 🚀"))
   .catch((err) => console.log("DB Connection Error: ", err));
 
-// --- 4. Multer Setup (Screenshot Upload) ---
+// --- 4. Multer Setup ---
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, uploadDir);
@@ -39,7 +39,10 @@ const upload = multer({ storage: storage });
 
 // --- 5. Models (Schema) ---
 const Help = mongoose.model('Help', { 
-    name: String, phone: String, reason: String, date: { type: Date, default: Date.now }
+    name: String, 
+    phone: String, 
+    reason: String, 
+    date: { type: Date, default: Date.now }
 });
 
 const Member = mongoose.model('Member', {
@@ -59,28 +62,30 @@ const Donation = mongoose.model('Donation', {
 
 // --- 6. Routes ---
 
-// Madad Form Submission
+// Madad Form Submission (index.html se data aayega)
 app.post('/apply-help', async (req, res) => {
     try {
-        const newHelp = new Help(req.body);
+        const newHelp = new Help({
+            name: req.body.name,
+            phone: req.body.phone,
+            reason: req.body.reason
+        });
         await newHelp.save();
         res.send("<script>alert('Aapka aavedan samiti ko mil gaya hai!'); window.location.href='/index.html';</script>");
     } catch (err) { res.status(500).send("Server Error"); }
 });
 
-// Registration with Unique ID (RS-101...)
+// Registration with Unique ID
 app.post('/register-member', async (req, res) => {
     try {
         const count = await Member.countDocuments();
         const uniqueId = `RS-${100 + count + 1}`; 
-
         const newMember = new Member({
             fullName: req.body.fullName,
             mobile: req.body.mobile,
             address: req.body.address,
             samitiId: uniqueId
         });
-
         await newMember.save();
         res.send(`<script>alert('Registration Safal! Aapki Sadasya ID hai: ${uniqueId}'); window.location.href='/index.html';</script>`);
     } catch (err) { res.status(500).send("Registration Error"); }
@@ -99,7 +104,7 @@ app.post('/record-donation', upload.single('screenshot'), async (req, res) => {
     } catch (err) { res.status(500).send("Upload Error"); }
 });
 
-// Public Member List (Sirf Naam aur ID dikhegi)
+// Public Member List
 app.get('/get-public-members', async (req, res) => {
     try {
         const data = await Member.find().select('fullName samitiId -_id');
@@ -117,21 +122,34 @@ app.post('/admin-login', (req, res) => {
     }
 });
 
-// Admin Dashboard Data Routes
-app.get('/get-help-requests', async (req, res) => { res.json(await Help.find()); });
-app.get('/get-members', async (req, res) => { res.json(await Member.find()); });
-app.get('/get-donations', async (req, res) => { res.json(await Donation.find()); });
+// --- ADMIN DASHBOARD DATA ROUTES ---
+app.get('/get-help-requests', async (req, res) => { 
+    try {
+        const data = await Help.find().sort({ _id: -1 });
+        res.json(data);
+    } catch (err) { res.status(500).json([]); }
+});
 
-// --- 7. Start Server (Render Compatible) ---
-const PORT = process.env.PORT || 3000;
+app.get('/get-members', async (req, res) => { 
+    try {
+        const data = await Member.find().sort({ _id: -1 });
+        res.json(data);
+    } catch (err) { res.status(500).json([]); }
+});
 
-// --- 7. Delete Entries (Admin Special) ---
+app.get('/get-donations', async (req, res) => { 
+    try {
+        const data = await Donation.find().sort({ _id: -1 });
+        res.json(data);
+    } catch (err) { res.status(500).json([]); }
+});
+
+// --- Delete Entries (Admin Special) ---
 app.delete('/delete-entry/:type/:id', async (req, res) => {
     try {
         const { type, id } = req.params;
         let model;
 
-        // Type ke hisaab se sahi table (model) chunna
         if (type === 'help') model = Help;
         else if (type === 'member') model = Member;
         else if (type === 'donation') model = Donation;
@@ -146,4 +164,7 @@ app.delete('/delete-entry/:type/:id', async (req, res) => {
         res.status(500).json({ success: false, error: err.message });
     }
 });
+
+// --- 7. Start Server ---
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Raghukul Server Live on Port ${PORT} 🚀`));
