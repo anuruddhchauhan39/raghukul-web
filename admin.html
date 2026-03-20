@@ -1,116 +1,126 @@
-
-
 <!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Panel - Shree Raghukul</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Raghukul Sewa Parivar</title>
     <style>
-    :root {
-        --primary: #2c3e50;
-        --accent: #e67e22;
-        --light: #f4f7f6;
-    }
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--light); margin: 0; }
-    header { background: var(--primary); color: white; padding: 20px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    
-    .btn-container { text-align: center; margin: 30px 0; }
-    button { 
-        padding: 12px 25px; margin: 10px; border: none; border-radius: 5px;
-        background: var(--accent); color: white; font-weight: bold; cursor: pointer;
-        transition: transform 0.2s, background 0.2s;
-    }
-    button:hover { background: #d35400; transform: translateY(-2px); }
-
-    .table-container { width: 95%; margin: auto; overflow-x: auto; background: white; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-    table { width: 100%; border-collapse: collapse; min-width: 600px; }
-    th { background: var(--primary); color: white; padding: 15px; text-align: left; }
-    td { padding: 12px 15px; border-bottom: 1px solid #eee; color: #333; }
-    tr:hover { background-color: #f9f9f9; }
-    
-    .status-badge { background: #27ae60; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
-</style>
-
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; border-bottom: 2px solid #27ae60; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #2c3e50; color: white; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; }
+        .screenshot-img { width: 80px; height: 80px; object-fit: cover; border-radius: 5px; cursor: pointer; }
+        .section-title { margin-top: 40px; background: #27ae60; color: white; padding: 10px; border-radius: 5px; }
     </style>
 </head>
 <body>
-    <div id="loginSection" style="max-width: 400px; margin: 100px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1); text-align: center;">
-    <h2>Admin Login</h2>
-    <input type="text" id="adminUser" placeholder="Username" style="width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
-    <input type="password" id="adminPass" placeholder="Password" style="width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
-    <button onclick="checkLogin()" style="width: 95%; background: #2c3e50; color: white; padding: 10px; cursor: pointer;">Login Karein</button>
-    <p id="errorMsg" style="color: red; display: none;"></p>
+
+<div class="container">
+    <h2>🚩 Shree Raghukul Admin Panel</h2>
+
+    <h3 class="section-title">Madad ke Aavedan (Help Requests)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Naam</th>
+                <th>Mobile</th>
+                <th>Karan</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="help-table"></tbody>
+    </table>
+
+    <h3 class="section-title">Sadasya List (Members)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Naam</th>
+                <th>Mobile</th>
+                <th>Pata</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="member-table"></tbody>
+    </table>
+
+    <h3 class="section-title">Donations & Screenshots</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Naam</th>
+                <th>Mobile</th>
+                <th>Screenshot</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="donation-table"></tbody>
+    </table>
 </div>
 
-<div id="dashboardSection" style="display: none;">
-    <header><h1>Shree Raghukul Admin Dashboard</h1></header>
-    <div class="btn-container" style="text-align: center; margin: 20px;">
-        <button onclick="loadData('help')" style="padding: 10px 20px; margin: 5px;">Madad ki Arzi dekhein</button>
-        <button onclick="loadData('members')" style="padding: 10px 20px; margin: 5px;">Naye Sadasya dekhein</button>
-        <button onclick="location.reload()" style="padding: 10px 20px; margin: 5px; background: #95a5a6;">Logout</button>
-    </div>
-    <div id="dataDisplay"></div>
-</div>
-    <script>
-async function checkLogin() {
-    const user = document.getElementById('adminUser').value;
-    const pass = document.getElementById('adminPass').value;
+<script>
+    // Data load karne ka function
+    async function loadAdminData() {
+        // Fetch Help
+        const resHelp = await fetch('/get-help-requests');
+        const helps = await resHelp.json();
+        const helpTable = document.getElementById('help-table');
+        helpTable.innerHTML = helps.map(h => `
+            <tr>
+                <td>${h.name}</td>
+                <td>${h.phone}</td>
+                <td>${h.reason}</td>
+                <td><button class="btn-delete" onclick="deleteEntry('help', '${h._id}')">Delete</button></td>
+            </tr>
+        `).join('');
 
-    const response = await fetch('/admin-login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: user, password: pass })
-    });
+        // Fetch Members
+        const resMem = await fetch('/get-members');
+        const members = await resMem.json();
+        const memTable = document.getElementById('member-table');
+        memTable.innerHTML = members.map(m => `
+            <tr>
+                <td style="font-weight:bold; color:#27ae60;">${m.samitiId || 'N/A'}</td>
+                <td>${m.fullName}</td>
+                <td>${m.mobile}</td>
+                <td>${m.address}</td>
+                <td><button class="btn-delete" onclick="deleteEntry('member', '${m._id}')">Delete</button></td>
+            </tr>
+        `).join('');
 
-    const result = await response.json();
-
-    if (result.success) {
-        document.getElementById('loginSection').style.display = 'none';
-        document.getElementById('dashboardSection').style.display = 'block';
-    } else {
-        const error = document.getElementById('errorMsg');
-        error.innerText = result.message;
-        error.style.display = 'block';
+        // Fetch Donations
+        const resDon = await fetch('/get-donations');
+        const donations = await resDon.json();
+        const donTable = document.getElementById('donation-table');
+        donTable.innerHTML = donations.map(d => `
+            <tr>
+                <td>${d.name}</td>
+                <td>${d.phone}</td>
+                <td>
+                    <a href="/uploads/donations/${d.screenshot}" target="_blank">
+                        <img src="/uploads/donations/${d.screenshot}" class="screenshot-img" alt="QR Screenshot">
+                    </a>
+                </td>
+                <td><button class="btn-delete" onclick="deleteEntry('donation', '${d._id}')">Delete</button></td>
+            </tr>
+        `).join('');
     }
-}
 
-    async function loadData(type) {
-        const displayDiv = document.getElementById('dataDisplay');
-        displayDiv.innerHTML = "<p style='text-align:center;'>Loading data...</p>";
-
-        const endpoint = type === 'help' ? '/get-help-requests' : '/get-members';
-        const response = await fetch(endpoint);
-        const data = await response.json();
-        
-        if(data.length === 0) {
-            displayDiv.innerHTML = "<p style='text-align:center;'>Abhi koi data nahi hai.</p>";
-            return;
+    // Delete karne ka function (Backend route ki zaroorat padegi)
+    async function deleteEntry(type, id) {
+        if(confirm('Kya aap ise delete karna chahte hain?')) {
+            alert('Delete function ke liye backend update baki hai, lekin UI taiyar hai!');
+            // Yahan delete ka fetch call aayega
         }
-
-        let html = `<div class="table-container"><table><thead><tr>`;
-        
-        // Table Headers
-        if(type === 'help') {
-            html += `<th>Naam</th><th>Mobile</th><th>Karan (Reason)</th><th>Status</th>`;
-        } else {
-            html += `<th>Sadasya Naam</th><th>Mobile</th><th>Pata (Address)</th>`;
-        }
-        html += `</tr></thead><tbody>`;
-        
-        // Table Rows
-        data.forEach(item => {
-            html += `<tr>
-                <td>${item.name || item.fullName}</td>
-                <td>${item.phone || item.mobile}</td>
-                <td>${item.reason || item.address}</td>
-                ${type === 'help' ? '<td><span class="status-badge">Received</span></td>' : ''}
-            </tr>`;
-        });
-
-        html += "</tbody></table></div>";
-        displayDiv.innerHTML = html;
     }
+
+    window.onload = loadAdminData;
 </script>
+
 </body>
 </html>
