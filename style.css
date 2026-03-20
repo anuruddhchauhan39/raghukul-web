@@ -1,158 +1,153 @@
-body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
-header { background: #2c3e50; color: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; }
-nav ul { display: fl ex; list-style: none; }
-nav ul li { margin-left: 20px; }
-nav ul li a { color: white; text-decoration: none; }
-
-.hero { text-align: center; padding: 50px; background: #ecf0f1; }
-.features { display: flex; justify-content: center; gap: 20px; padding: 40px; }
-.card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 200px; text-align: center; }
-button { background: #e74c3c; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; }
-
-.form-section {
-    max-width: 500px;
-    margin: 40px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+/* --- Global Resets (Sabse Zaruri) --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-.form-section h2 { text-align: center; color: #2c3e50; }
-
-.form-section label { display: block; margin-top: 15px; font-weight: bold; }
-
-.form-section input, .form-section textarea {
+body { 
+    font-family: 'Arial', sans-serif; 
+    overflow-x: hidden; 
+    background: #f4f4f4; 
     width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box; /* यह सुनिश्चित करता है कि पैडिंग से बॉक्स का साइज न बिगड़े */
 }
 
-.form-section button {
-    margin-top: 20px;
-    width: 100%;
-    background: #27ae60;
-    color: white;
-    border: none;
-    padding: 12px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.form-section button:hover { background: #219150; }
-
-.team-section { padding: 40px; background: #fff; text-align: center; }
-.team-container { display: flex; justify-content: center; gap: 40px; margin-top: 20px; }
-.member { padding: 20px; border: 1px solid #ddd; border-radius: 10px; width: 300px; }
-.member h3 { color: #2c3e50; }
-
-/* Navbar ko ek line mein laane ke liye */
+/* --- Header & Navbar Fix --- */
 .navbar {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
     background-color: #2c3e50;
-    padding: 10px 20px;
+    padding: 20px;
     width: 100%;
-    box-sizing: border-box;
     color: white;
+    text-align: center;
+}
+
+.logo h1 {
+    font-size: 24px;
+    color: #f1c40f;
+    margin-bottom: 5px;
+}
+
+.logo h3 {
+    font-size: 14px;
+    opacity: 0.8;
 }
 
 .nav-links {
-    display: flex; /* Ye line options ko ek sath laati hai */
+    display: flex;
+    flex-wrap: wrap; /* Mobile par menu niche shift ho jayegi */
     list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 40px;
-    justify-content: flex-end;
-    
-}
-
-.nav-links li {
-    margin-left: 20px;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 15px;
 }
 
 .nav-links a {
     color: white;
     text-decoration: none;
     font-weight: bold;
-    transition: 0.3s;
+    font-size: 14px;
 }
 
-.nav-links a:hover {
-    color: #e67e22; /* Hover karne par rang badlega */
+/* --- Hero Section --- */
+.hero { 
+    text-align: center; 
+    padding: 40px 20px; 
+    background: #ecf0f1; 
 }
 
-.logo h1 {
-    flex: 1;
-    font-size: 30px;
-    text-align: left;
-    padding: 0;
-    margin: 0;
-    color: #f1c40f; /* Samiti ka naam sunehre rang mein */
+/* --- Features & Cards (Mobile Fix) --- */
+.features { 
+    display: flex; 
+    flex-wrap: wrap; /* Isse cards niche aa jayenge */
+    justify-content: center; 
+    gap: 15px; 
+    padding: 20px; 
 }
 
-/* Mobile ke liye settings */
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-    }
-    .nav-links {
-        margin-top: 15px;
-    }
+.card { 
+    background: white; 
+    padding: 20px; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+    width: 100%; /* Mobile par poori width lega */
+    max-width: 300px; /* Desktop par 300px se bada nahi hoga */
+    text-align: center; 
 }
 
-/* Modal (Form Popup) Background */
+/* --- Form Sections --- */
+.form-section {
+    width: 90%;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* --- Team Section (Mobile Fix) --- */
+.team-section { padding: 40px 10px; background: #fff; text-align: center; }
+
+.team-container { 
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 20px; 
+    width: 100%; 
+    margin: 0 auto; 
+}
+
+.member { 
+    padding: 20px; 
+    border: 1px solid #ddd; 
+    border-radius: 10px; 
+    width: 100%; /* Fixed 300px hata kar 100% kiya */
+    max-width: 350px; 
+    background: #fff;
+}
+
+/* --- Modal Styling --- */
 .modal {
-    display: none; /* Shuru mein chhupa rahega */
+    display: none;
     position: fixed;
-    z-index: 1000;
+    z-index: 9999;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.7); /* Background dhundhla karne ke liye */
-    overflow: auto;
+    background-color: rgba(0,0,0,0.8);
+    overflow-y: auto;
 }
 
-/* Modal Content Box */
 .modal-content {
-    background-color: #fefefe;
-    margin: 5% auto;
+    background-color: #fff;
+    margin: 10% auto;
     padding: 20px;
     border-radius: 15px;
     width: 90%;
-    max-width: 500px;
+    max-width: 450px;
     position: relative;
-    animation: slideDown 0.4s;
 }
 
-@keyframes slideDown {
-    from {top: -300px; opacity: 0}
-    to {top: 0; opacity: 1}
-}
-
-/* Close Button */
-.close {
-    position: absolute;
-    right: 20px;
-    top: 10px;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-/* Button Styling for Cards */
-.card button {
+/* --- Buttons --- */
+button, .card button {
     background: #27ae60;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 20px;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 10px;
+    font-weight: bold;
+    width: 100%;
+}
+
+/* --- Mobile Specific Fixes --- */
+@media (max-width: 600px) {
+    .logo h1 { font-size: 20px; }
+    .nav-links { gap: 10px; }
+    .nav-links a { font-size: 12px; }
+    .hero h2 { font-size: 22px; }
 }
